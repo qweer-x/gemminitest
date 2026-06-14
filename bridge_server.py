@@ -49,6 +49,10 @@ DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 9999
 DEFAULT_LOG_DIR = ".auto_sync_logs"
 
+SUPPORTED_ACTIONS = {"write", "mkdir", "delete"}
+SUPPORTED_ACTION_TEXT = "ACTION: write、ACTION: mkdir、ACTION: delete"
+FORBIDDEN_ACTION_TEXT = "ACTION: append、ACTION: replace、ACTION: patch、ACTION: update、ACTION: insert"
+
 
 @dataclass
 class BridgeConfig:
@@ -231,6 +235,17 @@ def extract_raw_blocks(text: str) -> list[str]:
     raise SyncError("没有找到同步协议块。")
 
 
+def unsupported_action_message(action: str) -> str:
+    return (
+        f"不支持的 ACTION：{action}。\n"
+        f"当前 AUTO_SYNC 是封闭动作协议，只支持：{SUPPORTED_ACTION_TEXT}。\n"
+        f"禁止使用：{FORBIDDEN_ACTION_TEXT}。\n"
+        "AUTO_SYNC 不是 patch/append/replace 协议。\n"
+        "如果只是追加一小段、替换一小段、修改一行，也必须先读取当前完整文件内容，"
+        "然后使用 ACTION: write 输出完整文件。"
+    )
+
+
 def parse_block(raw_block: str) -> SyncBlock:
     inner = raw_block.strip()
 
@@ -263,8 +278,8 @@ def parse_block(raw_block: str) -> SyncBlock:
             file_path = stripped.split("FILE:", 1)[1].strip()
             break
 
-    if action not in {"write", "delete", "mkdir"}:
-        raise SyncError(f"不支持的 ACTION：{action}")
+    if action not in SUPPORTED_ACTIONS:
+        raise SyncError(unsupported_action_message(action))
 
     if file_line_index == -1:
         raise SyncError("协议块中没有找到 FILE: 行。")

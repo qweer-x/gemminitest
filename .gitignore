@@ -1,7 +1,5 @@
-
-Python
-
-pycache/
+# Python
+__pycache__/
 *.py[cod]
 *.pyo
 *.pyd
@@ -16,52 +14,44 @@ pip-wheel-metadata/
 .mypy_cache/
 .ruff_cache/
 
-Local environment
-
+# Local environment
 .env
 .env.*
 !.env.example
 
-AUTO_SYNC runtime files
-
+# AUTO_SYNC runtime files
 .auto_sync_logs/
 auto_sync_logs/
 logs/
 *.log
 
-Legacy local files
-
+# Legacy local files
 GitHub.py
 chatgpt_tampermonkey_script.js
 test_connection.txt
 
-IDE / Editor
-
+# IDE / Editor
 .vscode/
 .idea/
 *.code-workspace
 
-OS
-
+# OS
 .DS_Store
 Thumbs.db
 
-Build / dist
-
+# Build / dist
 dist/
 build/
 *.egg-info/
 
-Node / frontend cache
-
+# Node / frontend cache
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-Temporary files
-
+# Temporary files
 *.tmp
 *.temp
 *.bak
